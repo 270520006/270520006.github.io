@@ -1,0 +1,248 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>包装模式 | zsp</title><meta name="keywords" content="设计模式"><meta name="author" content="zsp"><meta name="copyright" content="zsp"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="包装模式（修饰器模式）​         对象增强的方式 继承 继承父类，子类扩展   装饰器模式 使用“包装”的方式来增强对象   代理模式 代理模式 或者看我代理模式的笔记。    继承​    最简单的方式就是继承父类，子类扩展来达到目的。虽然简单，但是这种方式的缺陷非常大：   如果父类是带有数据、信息、属性的话，那么子类无法增强。   子类实现了之后需求无法变更，增强的内容是固定的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="包装模式">
+<meta property="og:url" content="https://270520006.github.io/2021/06/11/%E5%8C%85%E8%A3%85%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="zsp">
+<meta property="og:description" content="包装模式（修饰器模式）​         对象增强的方式 继承 继承父类，子类扩展   装饰器模式 使用“包装”的方式来增强对象   代理模式 代理模式 或者看我代理模式的笔记。    继承​    最简单的方式就是继承父类，子类扩展来达到目的。虽然简单，但是这种方式的缺陷非常大：   如果父类是带有数据、信息、属性的话，那么子类无法增强。   子类实现了之后需求无法变更，增强的内容是固定的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://270520006.github.io/images/material/jo%E5%A4%AA%E9%83%8E.jpg">
+<meta property="article:published_time" content="2021-06-11T14:20:12.000Z">
+<meta property="article:modified_time" content="2021-06-17T08:26:40.485Z">
+<meta property="article:author" content="zsp">
+<meta property="article:tag" content="设计模式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://270520006.github.io/images/material/jo%E5%A4%AA%E9%83%8E.jpg"><link rel="shortcut icon" href="/img/jo4.jpg"><link rel="canonical" href="https://270520006.github.io/2021/06/11/%E5%8C%85%E8%A3%85%E6%A8%A1%E5%BC%8F/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '包装模式',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-06-17 08:26:40'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><link rel="stylesheet" href="APlayer.min.css"><div id="aplayer"></div><script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js" async></script><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/jo4.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> 图书</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> 游戏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/material/jo%E5%A4%AA%E9%83%8E.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">zsp</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> 图书</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> 游戏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">包装模式</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-06-11T14:20:12.000Z" title="发表于 2021-06-11 14:20:12">2021-06-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-06-17T08:26:40.485Z" title="更新于 2021-06-17 08:26:40">2021-06-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="包装模式"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="包装模式（修饰器模式）"><a href="#包装模式（修饰器模式）" class="headerlink" title="包装模式（修饰器模式）"></a>包装模式（修饰器模式）</h1><p>​        </p>
+<h3 id="对象增强的方式"><a href="#对象增强的方式" class="headerlink" title="对象增强的方式"></a>对象增强的方式</h3><ul>
+<li>继承<ul>
+<li>继承父类，子类扩展</li>
+</ul>
+</li>
+<li>装饰器模式<ul>
+<li>使用“包装”的方式来增强对象</li>
+</ul>
+</li>
+<li>代理模式<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI4Njg5MDA5NA==&mid=2247484222&idx=1&sn=5191aca33f7b331adaef11c5e07df468&chksm=ebd7423fdca0cb29cdc59b4c79afcda9a44b9206806d2212a1b807c9f5879674934c37c250a1&scene=21#wechat_redirect">代理模式</a></li>
+<li>或者看我代理模式的笔记。</li>
+</ul>
+</li>
+</ul>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>​    最简单的方式就是继承父类，子类扩展来达到目的。虽然简单，但是这种方式的<strong>缺陷非常大</strong>：</p>
+<ul>
+<li> 如果<strong>父类是带有数据、信息、属性的话，那么子类无法增强。</strong> </li>
+<li> 子类实现了之后<strong>需求无法变更</strong>，增强的内容是<strong>固定</strong>的。 </li>
+</ul>
+<p>举例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">当时想要自己写一个简易的JDBC连接池，连接池由List&lt;Connection&gt;来管理。显然我们的对象是Connection，当写到close()方法的时候卡住了。</span><br><span class="line"></span><br><span class="line">因为我们想要的功能是：调用close()是让我们的Connection返回到“连接池”(集合)中，而不是关闭掉。</span><br><span class="line"></span><br><span class="line">此时我们不能使用继承父类的方式来实现增强。因为Connection对象是由数据库厂商来实现的，在得到Connection对象的时候绑定了各种信息(数据库的username、password、具体的数据库是啥等等)。我们子类继承Connection是无法得到对应的数据的！就更别说调用close()方法了。</span><br></pre></td></tr></table></figure>
+
+<p>所以，我们可以看到子类继承父类这种方式来扩展是<strong>十分局限的，不灵活的</strong>~因此我们就有了<strong>装饰模式</strong>！</p>
+<h3 id="继承方式实现"><a href="#继承方式实现" class="headerlink" title="继承方式实现"></a>继承方式实现</h3><ul>
+<li>先写一个基本功能接口</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Phone</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 可以打电话</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">call</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>写一个类去实现基本功能接口</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IphoneX</span> <span class="keyword">implements</span> <span class="title">Phone</span> </span>&#123;    </span><br><span class="line">    <span class="meta">@Override</span>    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">()</span> </span>&#123;        </span><br><span class="line">        System.out.println(<span class="string">&quot;打电话给周围的人关注公众号Java3y&quot;</span>);    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>写一个类继承基本功能然后进行增强</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MusicPhone</span> <span class="keyword">extends</span> <span class="title">Phone</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 听彩铃</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">listenMusic</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;我怀念的是无话不说,我怀念的是一起做梦~~~~~~&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 在打电话之前听彩铃</span></span><br><span class="line">        listenMusic();</span><br><span class="line">        <span class="keyword">super</span>.call();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>后续一样，想要再增强，再继承一个类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里继承的是MusicPhone类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GiveCurrentTimePhone</span> <span class="keyword">extends</span> <span class="title">MusicPhone</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 给出当前的时间</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">currentTime</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;当前的时间是：&quot;</span> + System.currentTimeMillis());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.call();</span><br><span class="line">        <span class="comment">// 打完电话提示现在的时间是多少啦</span></span><br><span class="line">        currentTime();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>特点很明显需要去实现什么就继承什么类，缺点也很明显：</p>
+<ul>
+<li>我不想听彩铃了，但是我还想要看时间，做不到~</li>
+<li>我想要听彩铃前看下时间，做不到~</li>
+<li>需求变动很大，但是我要实现的功能很小不需要其他功能的时候，仍旧要继承一堆的类</li>
+</ul>
+<h3 id="包装-装饰器模式实现"><a href="#包装-装饰器模式实现" class="headerlink" title="包装/装饰器模式实现"></a>包装/装饰器模式实现</h3><ul>
+<li>先写一个接口代表类的基本功能，比如打电话。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Phone</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">call</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>然后写一个类继承他</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IphoneX</span> <span class="keyword">implements</span> <span class="title">Phone</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;给漂亮的女孩子打了个电话，但是未接通...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>写一层修饰类，然后修饰类记得要拿到传递的类然后递交给上一层：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PhoneDecorate</span> <span class="keyword">implements</span> <span class="title">Phone</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Phone phone;</span><br><span class="line"><span class="comment">//    这边是对方法进行了重写</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="title">PhoneDecorate</span><span class="params">(Phone phone)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.phone=phone;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//    调用phone的call方法</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        phone.call();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>写功能增强，这里是彩铃~</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MusicPhone</span> <span class="keyword">extends</span> <span class="title">PhoneDecorate</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">music</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;啊嘶嘚啊嘶嘚~选自《忐忑》&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MusicPhone</span><span class="params">(Phone phone)</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(phone);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">()</span></span>&#123;</span><br><span class="line">        music();</span><br><span class="line">        <span class="keyword">super</span>.call();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>写功能增强，这里是获取当前时间~</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GetCurrentTimePhone</span> <span class="keyword">extends</span> <span class="title">PhoneDecorate</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GetCurrentTimePhone</span><span class="params">(Phone phone)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(phone);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getCurrentTime</span><span class="params">()</span></span>&#123;</span><br><span class="line">        SimpleDateFormat df = <span class="keyword">new</span> SimpleDateFormat(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);<span class="comment">//设置日期格式</span></span><br><span class="line">        System.out.println(df.format(<span class="keyword">new</span> Date()));<span class="comment">// new Date()为获取当前系统时间</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.call();</span><br><span class="line">        getCurrentTime();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>写测试类去测试流程</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestDecoratorPhone</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Phone  iphoneX = <span class="keyword">new</span> IphoneX();</span><br><span class="line">        iphoneX=<span class="keyword">new</span> MusicPhone(iphoneX);</span><br><span class="line">        iphoneX=<span class="keyword">new</span> GetCurrentTimePhone(iphoneX);</span><br><span class="line">        iphoneX.call();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>总体脉络和文件：</p>
+<p> <img src="1623208329323.png" alt="1623208329323"></p>
+<h3 id="装饰模式的优缺点："><a href="#装饰模式的优缺点：" class="headerlink" title="装饰模式的优缺点："></a>装饰模式的优缺点：</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
+<li><p>装饰类和被装饰类是可以<strong>独立</strong>的，低耦合的。互相都不用知道对方的存在</p>
+</li>
+<li><p>装饰模式是继承的一种<strong>替代</strong>方案，<strong>无论包装多少层，返回的对象都是is-a的关系</strong>(上面的例子：包装完还是Phone类型)。</p>
+</li>
+<li><p>实现动态扩展，只要<strong>继承了装饰器</strong>就可以<strong>动态</strong>扩展想要的功能了。</p>
+</li>
+</ul>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>多层装饰是比较复杂的，提高了系统的复杂度。不利于我们调试~</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">zsp</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://270520006.github.io/2021/06/11/%E5%8C%85%E8%A3%85%E6%A8%A1%E5%BC%8F/">https://270520006.github.io/2021/06/11/%E5%8C%85%E8%A3%85%E6%A8%A1%E5%BC%8F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://270520006.github.io" target="_blank">zsp</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></div><div class="post_share"><div class="social-share" data-image="/images/material/jo%E5%A4%AA%E9%83%8E.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/06/11/%E5%AE%B9%E5%99%A8%E6%BA%90%E7%A0%81/"><img class="prev-cover" src="/images/material/%E9%AB%98%E5%9D%82%E7%A9%97%E4%B9%83%E6%9E%9C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">容器源码</div></div></a></div><div class="next-post pull-right"><a href="/2021/06/11/%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F/"><img class="next-cover" src="/images/material/dio.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">责任链模式</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/05/29/README/" title="设计模式总览"><img class="cover" src="/images/material/alljojo.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-29</div><div class="title">设计模式总览</div></div></a></div><div><a href="/2021/06/05/代理模式/" title="代理模式"><img class="cover" src="/images/material/dio2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-05</div><div class="title">代理模式</div></div></a></div><div><a href="/2021/06/16/工厂模式/" title="工厂模式"><img class="cover" src="/images/material/oldjo.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-16</div><div class="title">工厂模式</div></div></a></div><div><a href="/2021/06/05/模版方法模式/" title="模板方法模式"><img class="cover" src="/images/material/jo8.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-05</div><div class="title">模板方法模式</div></div></a></div><div><a href="/2021/06/05/策略模式/" title="策略模式"><img class="cover" src="/images/material/jo7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-05</div><div class="title">策略模式</div></div></a></div><div><a href="/2021/06/11/责任链模式/" title="责任链模式"><img class="cover" src="/images/material/dio.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-11</div><div class="title">责任链模式</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/jo4.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">zsp</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/270520006"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/270520006" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:15396226187@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">欢迎大家来到我的博客！我是一名程序猿，热爱技术和长跑，希望我们能成为朋友~</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8C%85%E8%A3%85%E6%A8%A1%E5%BC%8F%EF%BC%88%E4%BF%AE%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">包装模式（修饰器模式）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E5%A2%9E%E5%BC%BA%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">1.0.1.</span> <span class="toc-text">对象增强的方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF"><span class="toc-number">1.0.2.</span> <span class="toc-text">继承</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF%E6%96%B9%E5%BC%8F%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.0.3.</span> <span class="toc-text">继承方式实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%85%E8%A3%85-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.0.4.</span> <span class="toc-text">包装&#x2F;装饰器模式实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="toc-number">1.0.5.</span> <span class="toc-text">装饰模式的优缺点：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">1.0.5.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">1.0.5.2.</span> <span class="toc-text">缺点</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/07/07/%E6%A0%91%E7%9A%84%E6%BC%94%E5%8F%98/" title="树的演变"><img src="/images/material/%E5%92%95%E5%92%95%E5%90%88%E7%85%A7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="树的演变"/></a><div class="content"><a class="title" href="/2021/07/07/%E6%A0%91%E7%9A%84%E6%BC%94%E5%8F%98/" title="树的演变">树的演变</a><time datetime="2021-07-07T01:55:12.000Z" title="发表于 2021-07-07 01:55:12">2021-07-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/27/%E7%8E%A9%E8%BD%ACJVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/" title="玩转JVM之垃圾收集器"><img src="/images/material/486.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="玩转JVM之垃圾收集器"/></a><div class="content"><a class="title" href="/2021/06/27/%E7%8E%A9%E8%BD%ACJVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/" title="玩转JVM之垃圾收集器">玩转JVM之垃圾收集器</a><time datetime="2021-06-27T23:46:12.000Z" title="发表于 2021-06-27 23:46:12">2021-06-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/25/hashmap%E7%9A%84put%E6%96%B9%E6%B3%95/" title="Hashmap的数据结构、树化函数、put方法"><img src="/images/material/%E5%B0%8F%E6%B3%89%E8%8A%B1%E9%98%B3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hashmap的数据结构、树化函数、put方法"/></a><div class="content"><a class="title" href="/2021/06/25/hashmap%E7%9A%84put%E6%96%B9%E6%B3%95/" title="Hashmap的数据结构、树化函数、put方法">Hashmap的数据结构、树化函数、put方法</a><time datetime="2021-06-25T12:46:12.000Z" title="发表于 2021-06-25 12:46:12">2021-06-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/21/%E6%9C%AA%E6%9D%A5%E8%B6%8B%E5%8A%BF%EF%BC%9Ajdk8%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/" title="未来趋势：jdk8函数式编程（一）"><img src="/images/material/%E9%9C%9E.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="未来趋势：jdk8函数式编程（一）"/></a><div class="content"><a class="title" href="/2021/06/21/%E6%9C%AA%E6%9D%A5%E8%B6%8B%E5%8A%BF%EF%BC%9Ajdk8%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/" title="未来趋势：jdk8函数式编程（一）">未来趋势：jdk8函数式编程（一）</a><time datetime="2021-06-21T01:32:12.000Z" title="发表于 2021-06-21 01:32:12">2021-06-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/16/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" title="工厂模式"><img src="/images/material/oldjo.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="工厂模式"/></a><div class="content"><a class="title" href="/2021/06/16/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" title="工厂模式">工厂模式</a><time datetime="2021-06-16T21:59:12.000Z" title="发表于 2021-06-16 21:59:12">2021-06-16</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/material/jo%E5%A4%AA%E9%83%8E.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By zsp</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

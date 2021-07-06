@@ -1,0 +1,599 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>容器源码 | zsp</title><meta name="keywords" content="java进阶"><meta name="author" content="zsp"><meta name="copyright" content="zsp"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="题容器源码温馨提醒：idea的进入源码只要点击鼠标滑轮，返回上级只要输入Ctrl+alt+← ArrayList： 底层数据结构：数组  123public ArrayList() &amp;#123;     this.elementData &#x3D; DEFAULTCAPACITY_EMPTY_ELEMENTDATA;&#x2F;&#x2F;（值为空&amp;#123;&amp;#125;，空数组） &amp;#125;   Add方法：（面试可以秀">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器源码">
+<meta property="og:url" content="https://270520006.github.io/2021/06/11/%E5%AE%B9%E5%99%A8%E6%BA%90%E7%A0%81/index.html">
+<meta property="og:site_name" content="zsp">
+<meta property="og:description" content="题容器源码温馨提醒：idea的进入源码只要点击鼠标滑轮，返回上级只要输入Ctrl+alt+← ArrayList： 底层数据结构：数组  123public ArrayList() &amp;#123;     this.elementData &#x3D; DEFAULTCAPACITY_EMPTY_ELEMENTDATA;&#x2F;&#x2F;（值为空&amp;#123;&amp;#125;，空数组） &amp;#125;   Add方法：（面试可以秀">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://270520006.github.io/images/material/%E9%AB%98%E5%9D%82%E7%A9%97%E4%B9%83%E6%9E%9C.jpg">
+<meta property="article:published_time" content="2021-06-11T16:46:12.000Z">
+<meta property="article:modified_time" content="2021-06-25T05:11:29.603Z">
+<meta property="article:author" content="zsp">
+<meta property="article:tag" content="java进阶">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://270520006.github.io/images/material/%E9%AB%98%E5%9D%82%E7%A9%97%E4%B9%83%E6%9E%9C.jpg"><link rel="shortcut icon" href="/img/jo4.jpg"><link rel="canonical" href="https://270520006.github.io/2021/06/11/%E5%AE%B9%E5%99%A8%E6%BA%90%E7%A0%81/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '容器源码',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-06-25 05:11:29'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><link rel="stylesheet" href="APlayer.min.css"><div id="aplayer"></div><script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js" async></script><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/jo4.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> 图书</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> 游戏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/material/%E9%AB%98%E5%9D%82%E7%A9%97%E4%B9%83%E6%9E%9C.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">zsp</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> 图书</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> 游戏</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">容器源码</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-06-11T16:46:12.000Z" title="发表于 2021-06-11 16:46:12">2021-06-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-06-25T05:11:29.603Z" title="更新于 2021-06-25 05:11:29">2021-06-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java%E8%BF%9B%E9%98%B6/">java进阶</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="容器源码"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="题容器源码"><a href="#题容器源码" class="headerlink" title="题容器源码"></a>题容器源码</h1><p>温馨提醒：idea的进入源码只要点击鼠标滑轮，返回上级只要输入Ctrl+alt+←</p>
+<h3 id="ArrayList："><a href="#ArrayList：" class="headerlink" title="ArrayList："></a>ArrayList：</h3><ul>
+<li>底层数据结构：数组</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ArrayList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">     <span class="keyword">this</span>.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;<span class="comment">//（值为空&#123;&#125;，空数组）</span></span><br><span class="line"> &#125; </span><br></pre></td></tr></table></figure>
+
+<h4 id="Add方法：（面试可以秀一下grow过程）"><a href="#Add方法：（面试可以秀一下grow过程）" class="headerlink" title="Add方法：（面试可以秀一下grow过程）"></a>Add方法：（面试可以秀一下grow过程）</h4><ul>
+<li>第一次新增元素，minCapacity=size+1=0+1=1（size初始为0）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    ensureCapacityInternal(size + <span class="number">1</span>);  <span class="comment">// size初始为0</span></span><br><span class="line">    elementData[size++] = e;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>点击ensureCapacityInternal再往底层<ul>
+<li>（elementData、DEFAULTCAPACITY_EMPTY_ELEMENTDATA是一个对象数组，初始为空）</li>
+<li>DEFAULT_CAPACITY初始为10，可以说是初始容量，（但不是在这里决定的</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureCapacityInternal</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) &#123;</span><br><span class="line">           <span class="comment">//如果这是第二个元素放入，则不会进入判断而是直接返回minCapacity大小的容量</span></span><br><span class="line">           minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);  <span class="comment">//取出最大值，此时minCapacity=10</span></span><br><span class="line">       &#125;</span><br><span class="line">       ensureExplicitCapacity(minCapacity);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在进入ensureExplicitCapacity方法里查看<ul>
+<li>modCount初始为0，并且被<strong>transient</strong>修饰，保证不参与序列化和反序列化。是一个计数器，记录ArrayList进行add和remove的次数。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureExplicitCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">        modCount++;   						<span class="comment">//记录add和remove操作次数</span></span><br><span class="line">        <span class="comment">// overflow-conscious code</span></span><br><span class="line">        <span class="keyword">if</span> (minCapacity - elementData.length &gt; <span class="number">0</span>)   <span class="comment">//elementData初始为0代表原有数组，minCapacity初始为10 </span></span><br><span class="line">            grow(minCapacity);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ArrayList扩容<ul>
+<li>oldCapacity代表原来数组长度：旧的数组长度</li>
+<li>newCapacity代表新生成的数组长度：旧的数组长度+旧的数组长度右移一位</li>
+<li>MAX_ARRAY_SIZE：Integer的最大长度-8（减去8是因为jvm运行需要一些头字，大小为8）</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// overflow-conscious code</span></span><br><span class="line">    <span class="keyword">int</span> oldCapacity = elementData.length;  <span class="comment">//拿到原来数组</span></span><br><span class="line">    <span class="keyword">int</span> newCapacity = oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>); <span class="comment">//&gt;&gt;代表右移，右移移位相当于除2，所以整体长度为1.5倍原数组</span></span><br><span class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>) <span class="comment">//如果新的数组长度小于minCapacity长度（初始为size+1，为1，后面变为10）</span></span><br><span class="line">        newCapacity = minCapacity;  <span class="comment">//扩容长度变为初始容量10</span></span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>) <span class="comment">//怕超过数字的最大容量-8，为什么减去8，因为jvm会保存一些头字，这些为8</span></span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    <span class="comment">// minCapacity is usually close to size, so this is a win:</span></span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进入hugeCapacity源码继续查看</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">hugeCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>) <span class="comment">// overflow  //为什么超过了Integer最大长度-8还会小于0，因为溢出了二进制最大值</span></span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> OutOfMemoryError(); <span class="comment">//OOM异常</span></span><br><span class="line">       <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?	Integer.MAX_VALUE :MAX_ARRAY_SIZE;</span><br><span class="line">       <span class="comment">//如果没有溢出，则妥协 返回Integer最大长度给她</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>最后使用copyOf，将旧数组的值赋值给新数组</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">elementData = Arrays.copyOf(elementData, newCapacity);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>最后再返回add方法里，将索引挪到下一位，然后把元素添加进去</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">elementData[size++] = e;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">true</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Get方法："><a href="#Get方法：" class="headerlink" title="Get方法："></a>Get方法：</h4><ul>
+<li>get方法进入</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">     rangeCheck(index);  <span class="comment">//进入判断索引有没有超过数组最大长度</span></span><br><span class="line">     <span class="keyword">return</span> elementData(index);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进入rangeCheck方法</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">rangeCheck</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= size)  <span class="comment">//索引不能超过数组最大值，否则异常</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(outOfBoundsMsg(index));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进入elementData方法<ul>
+<li>这里面的E就是T，泛型</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">E <span class="title">elementData</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (E) elementData[index];  <span class="comment">//从elementData数组中取值返回</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Remove方法：-面试可以秀一下arraycopy过程"><a href="#Remove方法：-面试可以秀一下arraycopy过程" class="headerlink" title="Remove方法：(面试可以秀一下arraycopy过程)"></a>Remove方法：(面试可以秀一下arraycopy过程)</h4><ul>
+<li>remove方法是通过元素移动来实现的，先提取出要移动的元素，然后进行移动，最后将其值赋为空，jvm会帮我们自动处理数组内值为null的元素。 </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;       <span class="comment">//默认数组为&#123;a1,a2,a3,a4,a5&#125;</span></span><br><span class="line">    rangeCheck(index); </span><br><span class="line">    modCount++; <span class="comment">//计数器，记录add和remove了几次操作</span></span><br><span class="line">    E oldValue = elementData(index); <span class="comment">//从数组中取出索引对应元素</span></span><br><span class="line">    <span class="keyword">int</span> numMoved = size - index - <span class="number">1</span>; <span class="comment">//记录要移动的元素个数，例如你删除的元素索引值为“2”,则得到2</span></span><br><span class="line">    <span class="keyword">if</span> (numMoved &gt; <span class="number">0</span>)				<span class="comment">//当要移动的值大于0，因为有可能删除的是最后一个元素，就没有移动的元素</span></span><br><span class="line">        System.arraycopy(elementData, index+<span class="number">1</span>, elementData, index,numMoved);</span><br><span class="line">    elementData[--size] = <span class="keyword">null</span>; <span class="comment">// clear to let GC do its work</span></span><br><span class="line">    <span class="keyword">return</span> oldValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>rangeCheck：检查索引是否超过数组范围</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">rangeCheck</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span> (index &gt;= size)</span><br><span class="line">         <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(outOfBoundsMsg(index));</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>System.arraycopy：是一个本地方法，下面方法运行过程<ul>
+<li>默认数组为{a1,a2,a3,a4,a5},删除了a3，此时numMoved=2，要移动2个元素。</li>
+<li>第一个传入数组是原数组，从index+1（a4）开始复制numMoved位（2位）带第二个elementData的第三个位置中（原本a3位置）</li>
+<li>最终得到的数组是{a1,a2,a4,a5,a5}</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">arraycopy</span><span class="params">(Object src,  <span class="keyword">int</span>  srcPos,Object dest, <span class="keyword">int</span> destPos,<span class="keyword">int</span> length)</span></span>;</span><br><span class="line"> <span class="comment">//下面是从remove里抠下来的方便解释</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line">  System.arraycopy(elementData, index+<span class="number">1</span>, elementData, index,numMoved);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>最终将最后一个元素赋值为null，让JVM的GC帮我们处理空值，结果为{a1,a2,a4,a5}</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">elementData[--size] = <span class="keyword">null</span>; <span class="comment">// clear to let GC do its work</span></span><br><span class="line">  <span class="keyword">return</span> oldValue;</span><br></pre></td></tr></table></figure>
+
+<h3 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h3><p>底层数据结构：双向链表（每个队列都有独立的前置结点指针+后置结点指针+元素）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    E item;  <span class="comment">//队列存储的元素</span></span><br><span class="line">    Node&lt;E&gt; next;  <span class="comment">//后置结点指针</span></span><br><span class="line">    Node&lt;E&gt; prev;	<span class="comment">//前置结点指针</span></span><br><span class="line">    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">        <span class="keyword">this</span>.item = element; <span class="comment">//传入的元素</span></span><br><span class="line">        <span class="keyword">this</span>.next = next;   <span class="comment">//后置结点指针</span></span><br><span class="line">        <span class="keyword">this</span>.prev = prev;    <span class="comment">//前置结点指针</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>单向链表：只有next，作为后置结点指针，指向下个结点。</p>
+<p>双向链表：next和prev都有，一个指针指向后置结点，另一个指向前置结点。</p>
+<p><img src="%E9%93%BE%E8%A1%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.png" alt="链表数据结构"></p>
+<h4 id="Add方法："><a href="#Add方法：" class="headerlink" title="Add方法："></a>Add方法：</h4><ul>
+<li>将传入元素传递给linkLast方法：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    linkLast(e);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>; <span class="comment">//插入无需判断越界，所以直接返回true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进入linkLast方法：<ul>
+<li>node是什么，前面刚开始介绍了。</li>
+<li>last也是一个Node类，初始值为空，表示上个结点：transient Node<E> last;</li>
+<li>fist也是一个Node类，初始值为空，表示第一个结点：transient Node<E> first;</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">linkLast</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; l = last; <span class="comment">//l表示上个结点，如果为第一个则为null</span></span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(l, e, <span class="keyword">null</span>); </span><br><span class="line">    <span class="comment">//传入一个新的结点后，前置结点就是链表以前的最后一个结点，后置结点为空</span></span><br><span class="line">    last = newNode; <span class="comment">//最后一个结点变为新的结点</span></span><br><span class="line">    <span class="keyword">if</span> (l == <span class="keyword">null</span>) <span class="comment">//如果l为空说明现在传入的是链表的第一个结点</span></span><br><span class="line">        first = newNode; <span class="comment">//第一个结点变为新传入的结点</span></span><br><span class="line">    <span class="keyword">else</span>  <span class="comment">//否则上个结点的下置结点变为当前传入的新节点</span></span><br><span class="line">        l.next = newNode;</span><br><span class="line">    size++;  <span class="comment">//大小+1</span></span><br><span class="line">    modCount++;   <span class="comment">//统计进行了多少次add和remove</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    第一个元素插入：</p>
+<p><img src="image-20210620114419054.png" alt="image-20210620114419054"></p>
+<p>往后的元素插入：</p>
+<p><img src="image-20210620114902616.png" alt="image-20210620114902616"></p>
+<h4 id="Get方法"><a href="#Get方法" class="headerlink" title="Get方法"></a>Get方法</h4><ul>
+<li>进入方法内部，主要先判断长度有没有越界，没有就取值出来。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    checkElementIndex(index);</span><br><span class="line">    <span class="keyword">return</span> node(index).item;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进入checkElementIndex方法内部：判断传入的index是否超过固有长度。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkElementIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!isElementIndex(index))</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException(outOfBoundsMsg(index));</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>再进入isElementIndex：发现是拿add方法中的size和index。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isElementIndex</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">return</span> index &gt;= <span class="number">0</span> &amp;&amp; index &lt; size;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Remove方法："><a href="#Remove方法：" class="headerlink" title="Remove方法："></a>Remove方法：</h4><ul>
+<li>进入方法内部，和get方法一样先判断是否越界，这里不再赘述。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    checkElementIndex(index);</span><br><span class="line">    <span class="keyword">return</span> unlink(node(index));<span class="comment">//传入索引查出结点，而后把结点放入unlink方法中</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进入node方法，查看取出结点过程。<ul>
+<li>index &lt; (size &gt;&gt; 1)：判断索引是大于还是小于长度的一半。<ul>
+<li>大于就从头遍历,找到目标结点的上一个结点的后置节点指针，根据指针得到对应结点。</li>
+<li>小于就从尾遍历,找到目标结点的下一个结点的前置节点指针，根据指针得到对应结点。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Node&lt;E&gt; <span class="title">node</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// assert isElementIndex(index);</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; (size &gt;&gt; <span class="number">1</span>)) &#123; <span class="comment">//判断索引是大于还是小于长度的一半，大于就从头遍历</span></span><br><span class="line">        Node&lt;E&gt; x = first;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; i++) <span class="comment">//</span></span><br><span class="line">            x = x.next;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;  <span class="comment">//小于就从尾巴开始遍历</span></span><br><span class="line">        Node&lt;E&gt; x = last;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = size - <span class="number">1</span>; i &gt; index; i--)</span><br><span class="line">            x = x.prev;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进入unlink方法：有点多，但是不要怕，看注释，一步步都写好了。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">  <span class="function">E <span class="title">unlink</span><span class="params">(Node&lt;E&gt; x)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// assert x != null;</span></span><br><span class="line">      <span class="keyword">final</span> E element = x.item;</span><br><span class="line">      <span class="keyword">final</span> Node&lt;E&gt; next = x.next;</span><br><span class="line">      <span class="keyword">final</span> Node&lt;E&gt; prev = x.prev;</span><br><span class="line"><span class="comment">//刚开始把传入的结点全部取出</span></span><br><span class="line">      <span class="keyword">if</span> (prev == <span class="keyword">null</span>) &#123; <span class="comment">//如果前置结点指针为空，说明这个是第一个结点</span></span><br><span class="line">          first = next;  <span class="comment">//把首结点标记给到下一个结点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;			<span class="comment">//否则， 说明不是首结点</span></span><br><span class="line">          prev.next = next; <span class="comment">//把前置结点的后置指针指向删除的结点的下个结点</span></span><br><span class="line">          x.prev = <span class="keyword">null</span>; <span class="comment">//把要删除结点的前置指针置为空</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (next == <span class="keyword">null</span>) &#123; <span class="comment">//如果要删除的后置结点指针为空，说明最后一个结点</span></span><br><span class="line">          last = prev; <span class="comment">//把尾结点的标记给到下一个结点</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123; <span class="comment">//否则，说明不是尾结点</span></span><br><span class="line">          next.prev = prev;<span class="comment">//把后置结点的前置指针指向要删除的结点的上个结点</span></span><br><span class="line">          x.next = <span class="keyword">null</span>;<span class="comment">//把要删除结点的后置指针置为空</span></span><br><span class="line">      &#125;</span><br><span class="line">      x.item = <span class="keyword">null</span>; <span class="comment">//把要删除结点的值置为空</span></span><br><span class="line">      size--; <span class="comment">//长度减少1</span></span><br><span class="line">      modCount++; <span class="comment">//操作次数+1，remove和add都会增加modCount的次数</span></span><br><span class="line">      <span class="keyword">return</span> element; <span class="comment">//返回这个结点的值，以置空</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hashmap"><a href="#Hashmap" class="headerlink" title="Hashmap"></a>Hashmap</h3><p>​    底层数据结构：JDK1.7散列表（数组+链表），JDK1.8数组+链表/红黑树，这里我详细给大家介绍一下，当然想了解树的演变过程可以看我的下一篇文章。下面，先开始讲数据结构：</p>
+<h4 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h4><h5 id="散列表"><a href="#散列表" class="headerlink" title="散列表"></a>散列表</h5><p>先带大家认识下散列表，散列表就是数组+链表：</p>
+<ul>
+<li>当数据进入时，会先拿到该元素的hash值给到数组，然后再有相同的hash值的数据进入到数组中的话，就会进行哈希碰撞，碰撞有两个方法（拉链法和开放定址法）。<ul>
+<li>拉链法：当一个元素存储进散列表的时候，会先计算哈希值，然后放到数组里。遇到下一个放进来的元素和它的哈希值相同，就放到相同的链表里。</li>
+<li>开放定址法：当一个元素存储进散列表的时候，会先计算哈希值，然后放到数组里。遇到下一个放进来的元素和它的哈希值相同，就放到这个元素的下一个数组里(所以这个方法和底下这个图不匹配，不用看了)。</li>
+</ul>
+</li>
+</ul>
+<p><img src="1624429702119.png" alt="1624429702119"></p>
+<h5 id="红黑树"><a href="#红黑树" class="headerlink" title="红黑树"></a>红黑树</h5><p>  hashmap无非就是数组+链表（JDK1.7）或者数组+链表/红黑树（JDK1.8)散列表已经说完了，下面讲一讲红黑树，可能入门有点难度，如果看不懂的话，可以先看我的文章《树的演变》：</p>
+<p>  首先红黑树先记下来五个特点：</p>
+<ul>
+<li>每个节点或者是黑色，或者是红色。</li>
+<li>根节点是黑色。</li>
+<li>每个叶子节点（NIL）是黑色。 [注意：这里叶子节点，是指为空(NIL或NULL)的叶子节点！]</li>
+<li>如果一个节点是红色的，则它的子节点必须是黑色的。</li>
+<li>从一个节点到该节点的子孙节点的所有路径上包含相同数目的黑节点。</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li><p>特性(3)中的叶子节点，是只为空(NIL或null)的节点。</p>
+</li>
+<li><p>特性(5)，确保没有一条路径会比其他路径长出俩倍。因而，红黑树是相对是接近平衡的二叉树。</p>
+<p>这里解释下什么是 nil、Nil、NULL、NSNull （不区分大小写）：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nil：指向一个对象的空指针,对objective c id 对象赋空值.</span><br><span class="line">Nil：指向一个类的空指针,表示对类进行赋空值.</span><br><span class="line">NULL：指向其他类型（如：基本类型、C类型）的空指针, 用于对非对象指针赋空值.</span><br><span class="line">NSNull：在集合对象中，表示空值的对象.</span><br></pre></td></tr></table></figure>
+
+<p> 以下是对应五个特点画出来的红黑树图：画的不好看，见谅。。。</p>
+<p><img src="NP9ET%5B9%5DNZ4LM30NM%5BYTNXA.png" alt="img"> </p>
+<p>  任何用来存储的数据结构，最主要的还是<strong>添加</strong>、<strong>删除</strong>。在对红黑树进行添加或删除之后，都会用到旋转方法。为什么呢？道理很简单，添加或删除红黑树中的节点之后，红黑树就发生了变化，可能不满足红黑树的5条性质，也就不再是一颗红黑树了，而是一颗普通的树。而通过旋转，可以使这颗树重新成为红黑树。简单点说，旋转的目的是让树保持红黑树的特性。<br>  旋转包括两种：<strong>左旋</strong> 和 <strong>右旋</strong>。下面分别对它们进行介绍。 </p>
+<h6 id="左旋"><a href="#左旋" class="headerlink" title="左旋"></a>左旋</h6><p>步骤如下：（左旋左子树，改变左子树，并变成左子树）</p>
+<ul>
+<li>先将Y的｛左｝子树给X。</li>
+<li>将X父亲给Y ，这时候有三种情况，如图所示。</li>
+<li>最后完成了左旋。</li>
+</ul>
+<p><img src="%E5%B7%A6%E6%97%8B.jpg" alt="左旋 "></p>
+<h6 id="右旋"><a href="#右旋" class="headerlink" title="右旋"></a>右旋</h6><p>步骤如下：（右旋,改变右子树，并变成右子树）</p>
+<ul>
+<li>先将X的｛右｝子树给Y。</li>
+<li>将Y父亲给X ，这时候有三种情况，如图所示。</li>
+<li>最后完成了右旋。</li>
+</ul>
+<p><img src="%E5%8F%B3%E6%97%8B.jpg" alt="右旋"></p>
+<p>足够细心的话会发现，左右旋是对称的，即左旋以后再右旋就能回到原本的样子。</p>
+<ul>
+<li><p>左旋就提旋转目标的右子树上去，使自身变成右子树。</p>
+</li>
+<li><p>右旋就提旋转目标的左子树上去，使自身变成左子树。</p>
+<p>举例：以下都以X为旋转目标：</p>
+</li>
+</ul>
+<p><img src="image-20210623203807844.png" alt="image-20210623203807844"></p>
+<p><img src="image-20210623203819697.png" alt="image-20210623203819697"></p>
+<p>这一块想看代码可以看我的《树的演变》一章，里面会详细告诉大家，树的相关操作的所有代码。</p>
+<h6 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h6><p>  在讲添加时，我们先讲一下，插入元素应该要做的事：</p>
+<p><strong>第一步: 将红黑树当作一颗二叉查找树，将节点插入。</strong><br>    红黑树本身就是一颗二叉查找树，将节点插入后，该树仍然是一颗二叉查找树。也就意味着，树的键值仍然是有序的。此外，无论是左旋还是右旋，若旋转之前这棵树是二叉查找树，旋转之后它一定还是二叉查找树。这也就意味着，任何的旋转和重新着色操作，都不会改变它仍然是一颗二叉查找树的事实。<br>    好吧？那接下来，我们就来想方设法的旋转以及重新着色，使这颗树重新成为红黑树！</p>
+<p><strong>第二步：将插入的节点着色为”红色”。</strong><br>    为什么着色成红色，而不是黑色呢？为什么呢？在回答之前，我们需要重新温习一下红黑树的特性：<br>(1) 每个节点或者是黑色，或者是红色。<br>(2) 根节点是黑色。<br>(3) 每个叶子节点是黑色。 [注意：这里叶子节点，是指为空的叶子节点！]<br>(4) 如果一个节点是红色的，则它的子节点必须是黑色的。<br>(5) 从一个节点到该节点的子孙节点的所有路径上包含相同数目的黑节点。<br>    将插入的节点着色为红色，不会违背”特性(5)”！少违背一条特性，就意味着我们需要处理的情况越少。接下来，就要努力的让这棵树满足其它性质即可；满足了的话，它就又是一颗红黑树了。o(∩∩)o…哈哈</p>
+<p><strong>第三步: 通过一系列的旋转或着色等操作，使之重新成为一颗红黑树。</strong><br>    第二步中，将插入节点着色为”红色”之后，不会违背”特性(5)”。那它到底会违背哪些特性呢？<br>    对于”特性(1)”，显然不会违背了。因为我们已经将它涂成红色了。<br>    对于”特性(2)”，显然也不会违背。在第一步中，我们是将红黑树当作二叉查找树，然后执行的插入操作。而根据二叉查找数的特点，插入操作不会改变根节点。所以，根节点仍然是黑色。<br>    对于”特性(3)”，显然不会违背了。这里的叶子节点是指的空叶子节点，插入非空节点并不会对它们造成影响。<br>    对于”特性(4)”，是有可能违背的！<br>    那接下来，想办法使之”满足特性(4)”，就可以将树重新构造成红黑树了。</p>
+<p>  下去这部分可能有点难度，大家跟好车，先看一下这部分伪代码，这里我们是要插入z，然后在节点Y下插入的，我将插入数据分为两步，<strong>插入</strong>和<strong>染色</strong>：</p>
+<ul>
+<li><p>插入：这里是假设存在Y这个节点，然后分为三种情况</p>
+<ul>
+<li>Y是空节点，则插入的Z就变成了唯一节点，即根</li>
+<li>Z&lt;Y，把Z设为左孩子。</li>
+<li>Z&gt;Y，把Z设为右孩子。</li>
+</ul>
+<p>最后进行插入节点的左右孩子设空，还有插入节点着色，这部分相对简单，就不给图了。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">RB-INSERT(T, z)  </span><br><span class="line">  y ← nil[T]                        <span class="comment">// 新建节点“y”，将y设为空节点。</span></span><br><span class="line">  x ← root[T]                       <span class="comment">// 设“红黑树T”的根节点为“x”</span></span><br><span class="line">  <span class="keyword">while</span> x ≠ nil[T]                  <span class="comment">// 找出要插入的节点“z”在二叉树T中的位置“y”</span></span><br><span class="line">      <span class="keyword">do</span> y ← x                      </span><br><span class="line">         <span class="keyword">if</span> key[z] &lt; key[x]  </span><br><span class="line">            then x ← left[x]  </span><br><span class="line">            <span class="keyword">else</span> x ← right[x]  </span><br><span class="line">  p[z] ← y                          <span class="comment">// 设置 “z的父亲” 为 “y”</span></span><br><span class="line">  <span class="keyword">if</span> y = nil[T]                     </span><br><span class="line">     then root[T] ← z               <span class="comment">// 情况1：若y是空节点，则将z设为根</span></span><br><span class="line">     <span class="keyword">else</span> <span class="keyword">if</span> key[z] &lt; key[y]        </span><br><span class="line">             then left[y] ← z   <span class="comment">// 情况2：若“z所包含的值” &lt; “y所包含的值”，则将z设为“y的左孩子”</span></span><br><span class="line">             <span class="keyword">else</span> right[y] ← z  <span class="comment">// 情况3：(“z所包含的值” &gt;= “y所包含的值”)将z设为“y的右孩子” </span></span><br><span class="line">  left[z] ← nil[T]              <span class="comment">// z的左孩子设为空</span></span><br><span class="line">  right[z] ← nil[T]             <span class="comment">// z的右孩子设为空。至此，已经完成将“节点z插入到二叉树”中了。</span></span><br><span class="line">  color[z] ← RED                <span class="comment">// 将z着色为“红色”</span></span><br><span class="line">  RB-INSERT-FIXUP(T, z)         <span class="comment">// 通过RB-INSERT-FIXUP对红黑树的节点进行颜色修改以及旋转，让树T仍然是一颗红黑树</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>染色：分为三种情况<ul>
+<li>如果插入的元素是根节点，那么<strong>直接插入然后染色黑色</strong>。</li>
+<li>插入节点的父节点是黑色，因为我们插入的是红色，满足5个特性，<strong>所以不需要染色</strong>。</li>
+<li>被插入的节点的父节点是红色。，因为和特性不符，所以分为以下三种情况处理：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">RB-INSERT-FIXUP(T, z)</span><br><span class="line"><span class="keyword">while</span> color[p[z]] = RED                   <span class="comment">// 若“当前节点(z)的父节点是红色”，则进行以下处理。</span></span><br><span class="line">    <span class="keyword">do</span> <span class="keyword">if</span> p[z] = left[p[p[z]]]     <span class="comment">// 若“z的父节点”是“z的祖父节点的左孩子”，则进行以下处理。</span></span><br><span class="line">          then y ← right[p[p[z]]]  <span class="comment">// 将y设置为“z的叔叔节点(z的祖父节点的右孩子)”</span></span><br><span class="line">               <span class="keyword">if</span> color[y] = RED   <span class="comment">// Case1 父节点是红色，叔叔节点（父节点的兄弟节点）是红色的。</span></span><br><span class="line">                  then color[p[z]] ← BLACK         情况<span class="number">1</span><span class="comment">//(01) 将“父节点”设为黑色。</span></span><br><span class="line">                       color[y] ← BLACK            情况<span class="number">1</span><span class="comment">//(02) 将“叔叔节点”设为黑色。</span></span><br><span class="line">                       color[p[p[z]]] ← RED        情况<span class="number">1</span><span class="comment">//(03) 将“祖父节点”设为“红色”。</span></span><br><span class="line">                       z ← p[p[z]]                 情况<span class="number">1</span><span class="comment">//(04) 将“祖父节点”设为“当前节点”(红色节点)</span></span><br><span class="line">                  <span class="keyword">else</span> <span class="keyword">if</span> z = right[p[z]]          <span class="comment">// Case 2 叔叔是黑色，且当前节点是右孩子</span></span><br><span class="line">                          then z ← p[z]            情况<span class="number">2</span><span class="comment">//(01)将“父节点”作为“新的当前节点”。</span></span><br><span class="line">                               LEFT-ROTATE(T, z)   情况<span class="number">2</span><span class="comment">//(02)以“新的当前节点”为支点进行左旋。</span></span><br><span class="line">                          color[p[z]] ← BLACK      <span class="comment">// Case 3 叔叔是黑色，且当前节点是左孩子。(01) 将“父节点”设为“黑色”。</span></span><br><span class="line">                          color[p[p[z]]] ← RED     情况<span class="number">3</span><span class="comment">//(02) 将“祖父节点”设为“红色”。</span></span><br><span class="line">                          RIGHT-ROTATE(T, p[p[z]]) 情况<span class="number">3</span><span class="comment">//(03) 以“祖父节点”为支点进行右旋。</span></span><br><span class="line">       <span class="keyword">else</span> (same as then clause with <span class="string">&quot;right&quot;</span> and <span class="string">&quot;left&quot;</span> exchanged)   <span class="comment">// 若“z的父节点”是“z的祖父节点的右孩子”，将上面的操作中“right”和“left”交换位置，然后依次执行。</span></span><br><span class="line">color[root[T]] ← BLACK</span><br></pre></td></tr></table></figure>
+
+<p><strong>三种情况图解</strong>：</p>
+<ul>
+<li>父节点是红色，叔叔节点（父节点的兄弟节点）是红色的，下图是左右孩子。    <ul>
+<li>将父节点和叔叔节点染成黑色，祖父节点染成红色即可。</li>
+</ul>
+</li>
+</ul>
+<p><img src="bl%E6%A0%91%E6%B7%BB%E5%8A%A0case1.jpg" alt="bl树添加case1"></p>
+<ul>
+<li>父节点是红色，叔叔节点是黑色，添加的节点是父节点的左孩子。<ul>
+<li>先将父节点染成黑色；</li>
+<li>将祖父节点染成红色；</li>
+<li>将父节点进行右旋；</li>
+</ul>
+</li>
+</ul>
+<p><img src="bl%E6%A0%91%E6%B7%BB%E5%8A%A0case2.jpg" alt="bl树添加case2"></p>
+<ul>
+<li>父节点是红色，叔叔节点是黑色，添加的节点是父节点的右孩子。<ul>
+<li>先将父节点左旋</li>
+<li>先将子节点染色</li>
+<li>将祖父节点染色</li>
+<li>把祖父节点右旋</li>
+</ul>
+</li>
+</ul>
+<p><img src="bl%E6%A0%91%E6%B7%BB%E5%8A%A0case3.jpg" alt="bl树添加case3"></p>
+<p>  至此，添加操作完成了，当然最难的还不是添加操作，而是删除操作，因为删除操作不仅得满足五点原则，还得满足平衡二叉树。</p>
+<h6 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h6><p>  这边粗略先介绍下二叉树节点删除思路，如果需要看更详细内容，可以看我下一篇文章《树的演变》。</p>
+<p><strong>二叉树节点删除的思路</strong></p>
+<ul>
+<li>如果要删除的节点正好是叶子节点，直接删除即可；</li>
+<li>如果要删除的节点还有子节点，就需要建立父节点和子节点的关系：<ul>
+<li>如果只有左孩子或者右孩子，直接把这个孩子上移放到要删除的位置就好了；</li>
+<li>如果有两个孩子，就需要选一个合适的孩子节点作为新的根节点，该节点称为 继承节点。（新节点要求比所有左子树要大、比右子树要小，我们可以选择左子树中的最大节点，或者选择右子树中的最小的节点。）</li>
+</ul>
+</li>
+</ul>
+<p><strong>红黑树节点删除的思路</strong></p>
+<p>   我们需要在二叉树删除的思路上，再考虑对删除完后的树进行调整。 二叉树的平衡分为两打点或三个小点，而二叉树还要再去进行相应调整，这样对我们来说工作量太大了，所以我们将这些东西合并在一起来讲述。</p>
+<ul>
+<li><p>先进行二叉树的删除，分为三种情况：</p>
+<ul>
+<li>如果删除节点没有孩子，则说明是叶子，直接删除即可。（步骤A）</li>
+<li>如果删除的节点只有一个孩子，则用这个唯一的儿子去代替它即可。（步骤B）</li>
+<li>如果删除的节点有两个孩子，则要进行两步处理：<ul>
+<li>  如果有两个孩子，就需要选一个合适的孩子节点作为新的根节点，该节点称为继承节点。 选择孩子节点中，左子树中的最大节点（左树最右），或者选择右子树中的最小的节点（右树最左），成为继承节点。</li>
+<li>  然后再将选择的继承节点的孩子节点重复步骤A或步骤B即可。（不用考虑两个孩子的情况，因为如果有孩子就不可能是子树最左或者最右）。</li>
+</ul>
+</li>
+</ul>
+<p>如下图所示，删除的是80这个元素，如果你能推出可以成为继承节点的是75或者90，就说明可以了。（忽略颜色）</p>
+</li>
+</ul>
+<p><img src="1624522369300.png" alt="1624522369300"></p>
+<p><img src="1624522408379.png" alt="1624522408379"></p>
+<p>  因为染色需要对比五个性质是否被改变，所以这里提一嘴五个性质：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">* 每个节点或者是黑色，或者是红色。</span><br><span class="line">* 根节点是黑色。</span><br><span class="line">* 每个叶子节点（NIL）是黑色。 [注意：这里叶子节点，是指为空(NIL或NULL)的叶子节点！]</span><br><span class="line">* 如果一个节点是红色的，则它的子节点必须是黑色的。</span><br><span class="line">* 从一个节点到该节点的子孙节点的所有路径上包含相同数目的黑节点。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>染色(DelFixUp)：染色或者叫做调整，大体分为两种情况：</p>
+<ul>
+<li>删除红色节点，不会破坏红黑树原有性质，所以只要把要调整上的节点赋值给删除的节点，然后删除原有节点即可。这里我们删除40作为尝试，会发现35上位后，仅删除了原有的35。</li>
+</ul>
+<p><img src="image-20210624205033044.png" alt="image-20210624205033044"></p>
+<p><img src="image-20210624205129268.png" alt="image-20210624205129268"></p>
+<ul>
+<li><p>删除黑色节点，这里分为四部分：因为删除黑色节点会破坏红黑树的五大性质</p>
+<ul>
+<li>兄弟节点是黑色，且其子节点都是黑色：将兄弟节点染色（这样只解决了当前部分的五个性质），然后把目标节点的父亲节点当成新的目标节点递归，<strong>直到x为红色时或者x为根节点时</strong>退出，退出时，<strong>再将X变为黑色</strong>。</li>
+</ul>
+<p><img src="%E6%83%85%E5%86%B51.jpg" alt="情况1"></p>
+<ul>
+<li>兄弟节点是黑色，其右子结点为红色:<ul>
+<li>纠错：（1、将X兄弟节点W染色成和父亲节点一个颜色—-&gt;1、将W进行染红色处理）</li>
+</ul>
+</li>
+</ul>
+<p><img src="%E6%83%85%E5%86%B52.jpg" alt="情况2"></p>
+<ul>
+<li>兄弟节点是黑色，其子节点左红右黑</li>
+</ul>
+<p> <img src="%E6%83%85%E5%86%B53.jpg" alt="情况3"></p>
+<ul>
+<li>兄弟节点是是红色</li>
+</ul>
+<p><img src="%E6%83%85%E5%86%B54.jpg" alt="情况4"></p>
+</li>
+</ul>
+<p>至此，红黑树的数据结构介绍完毕，我们可以开始讲Hashmap，这部分有点长，我在想要不要单独抽取出来放在数据结构中。。。（这边纯手打的，图也是我自己画的，引用的时候麻烦给上个名字，求求了，呜呜呜~~~）</p>
+</li>
+</ul>
+<h4 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h4><p>​    这里说一下桶，网上大部分博客意见不一，有的把数组叫做桶，有的把整个数组和链表叫做桶，个人拙见，桶应该是单个数组对应的链表称之为桶：</p>
+<ul>
+<li>桶：就是这一条，看图，是一个数组里的元素和对应的一条链表，两个合起来称之为桶。</li>
+<li>桶长：是这个数组里的某个元素对应的链表长度。</li>
+<li>位桶：这个数组。</li>
+</ul>
+<p><img src="1624430400201.png" alt="1624430400201"></p>
+<h4 id="参数介绍"><a href="#参数介绍" class="headerlink" title="参数介绍"></a>参数介绍</h4><ul>
+<li>DEFAULT_INITIAL_CAPACITY：初始化容量，或者叫初始化位桶的数量。</li>
+<li>1&lt;&lt;4：位运算表示左移4位，即2^4。</li>
+<li>MAXIMUM_CAPACITY:最大容量，不能超过2^30。</li>
+<li>DEFAULT_LOAD_FACTOR：初始化因子，作为扩容依据的一个乘法变量。</li>
+<li>TREEIFY_THRESHOLD：链表最大容量转化容量，当链表要变为红黑树时，必须满足位存储数量大于64且桶长大于8。为什么是8？因为经过计算，哈希值相同的数，同时出现8个的可能性仅为0.00000006，所以不会反复发生变树的情况。</li>
+<li>UNTREEIFY_THRESHOLD：红黑树退化成链表的阈值。为什么是6，因为如果设置为7的话，反复进行树的拆解，非常的消耗内存。</li>
+<li>MIN_TREEIFY_CAPACITY：最小化树存储数量，应该为4*树化阈值，即64。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">4</span>; <span class="comment">//16 初始化容量为16个位桶，英文注解上写着必须是2的倍数</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAXIMUM_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TREEIFY_THRESHOLD = <span class="number">8</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> UNTREEIFY_THRESHOLD = <span class="number">6</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MIN_TREEIFY_CAPACITY = <span class="number">64</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Put方法"><a href="#Put方法" class="headerlink" title="Put方法"></a>Put方法</h4><ul>
+<li>直接进入put方法查看，解释一下参数：<ul>
+<li>hash(key)：对键值取hash</li>
+<li>key、value：键值对</li>
+<li>false是onlyIfAbsent的值：下面进入方法会说。</li>
+<li>true是evict的值：其他构造器创建map之后再调用put方法，该参数则为true，表示不在创造者模式。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> putVal(hash(key), key, value, <span class="keyword">false</span>, <span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>进入hash方法查看一下发生了什么:</p>
+<ul>
+<li>h &gt;&gt;&gt; 16,h &gt;&gt;&gt; 16是用来<strong>取出h的高16</strong>位，(&gt;&gt;&gt;是无符号右移)。</li>
+<li>h = key.hashCode()：就是取key的hash值。</li>
+<li>(h = key.hashCode()) ^ (h &gt;&gt;&gt; 16)：是让hash值和高16位进行异或，目的是为了让其哈希的结果更加的随机。</li>
+</ul>
+<p>为什么用高16位，因为高16位在我们平时的使用中较少用到，大多数情况下低16位的数值在65536以内就已经足够我们使用了。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>下面进入putVal，这部分内容较remove而言较为简单。<ul>
+<li>onlyIfAbsent：表示如果hash冲突时，新值是否替换旧值，false表示替换。（这里可以用于）</li>
+<li>evict：表示创造者模式，只有在调用map的构造参数的时候为false，表示启用。其他时刻为true，不启用。</li>
+<li>table：表示当前的散列表，初始化为0，是一个节点数组，阅读注解得知，每次扩容也是2的指数幂。</li>
+<li>n：用来存储扩容后的长度。</li>
+<li>p：表示寻址到的相同哈希的节点。</li>
+<li>tab[i = (n - 1) &amp; hash]: 通过取模运算，来获得寻址结果。也就是传入的key-value键值对在数组中的存储位置。</li>
+<li>treeifyBin：表示树化，后面会讲。</li>
+<li>threshold：在官方文档注解中，代表扩容阈值，初始化为0，但规定了就算为0也代表成当前最大容量*负载因子。(The next size value at which to resize (capacity * load factor))</li>
+<li>resize()：扩容方法，下面会讲。</li>
+<li>treeifyBin(tab, hash)：树化方法，下面会讲。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">boolean</span> onlyIfAbsent,</span></span></span><br><span class="line"><span class="params"><span class="function">               <span class="keyword">boolean</span> evict)</span> </span>&#123;</span><br><span class="line">    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; <span class="keyword">int</span> n, i;					<span class="comment">//创造节点数组，和一个p节点，还有常量n和i</span></span><br><span class="line">    <span class="keyword">if</span> ((tab = table) == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>)</span><br><span class="line">        n = (tab = resize()).length; <span class="comment">//如果table表未初始化，或者数组长度为0，就会进行扩容操作，并返回扩容后的数组长度</span></span><br><span class="line">    <span class="keyword">if</span> ((p = tab[i = (n - <span class="number">1</span>) &amp; hash]) == <span class="keyword">null</span>)<span class="comment">//如果为null，说明此处还没有存储元素，将key-value包装成Node设置在i处</span></span><br><span class="line">        tab[i] = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">    <span class="keyword">else</span> &#123; 	   <span class="comment">//else说明寻址结果i已经存储的有元素了，哈希冲突了</span></span><br><span class="line">        Node&lt;K,V&gt; e; K k;	<span class="comment">//两个临时变量，node和key</span></span><br><span class="line">        <span class="keyword">if</span> (p.hash == hash &amp;&amp;  <span class="comment">//表示你要插入的key和原位置的key完全相同，这里将p赋值给e，便于后文的替换操作</span></span><br><span class="line">            ((k = p.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">            e = p;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (p <span class="keyword">instanceof</span> TreeNode)     <span class="comment">//此时说明p已经树化，调用红黑树的方法添加到指定位置</span></span><br><span class="line">            e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(<span class="keyword">this</span>, tab, hash, key, value);</span><br><span class="line">        <span class="keyword">else</span> &#123;<span class="comment">//走到这里说明，hash寻址冲突了，并且和寻址结果i处的key不同，也不是树，说明此时要在链表上操作了</span></span><br><span class="line">            	<span class="comment">//找到链表的尾节点，插入新节点</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> binCount = <span class="number">0</span>; ; ++binCount) &#123;</span><br><span class="line">                <span class="keyword">if</span> ((e = p.next) == <span class="keyword">null</span>) &#123;  <span class="comment">//寻找尾节点</span></span><br><span class="line">                    p.next = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">                    <span class="keyword">if</span> (binCount &gt;= TREEIFY_THRESHOLD - <span class="number">1</span>) <span class="comment">//桶长大于等于7，说明要树化</span></span><br><span class="line">                        treeifyBin(tab, hash);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (e.hash == hash &amp;&amp;<span class="comment">//此时在链表找尾节点时，发现了和新插入节点完全一致的key，所以记录，跳出，后文替换</span></span><br><span class="line">                    ((k = e.key) == key || (key != <span class="keyword">null</span> &amp;&amp; key.equals(k))))</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                p = e; <span class="comment">//用p来记载冲突节点，</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (e != <span class="keyword">null</span>) &#123; <span class="comment">// 替换操作，如果e!=null，说明e记录了冲突的节点</span></span><br><span class="line">            V oldValue = e.value; <span class="comment">//记录冲突节点的老值</span></span><br><span class="line">            <span class="keyword">if</span> (!onlyIfAbsent || oldValue == <span class="keyword">null</span>)</span><br><span class="line">                e.value = value; <span class="comment">//如果不是创造模式，则e的value会等于新值，进行替换操作。</span></span><br><span class="line">            afterNodeAccess(e);</span><br><span class="line">            <span class="keyword">return</span> oldValue;  <span class="comment">//返回被替换的旧值</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ++modCount; <span class="comment">//这个和集合一样，记录add和remove操作次数</span></span><br><span class="line">    <span class="keyword">if</span> (++size &gt; threshold)	  <span class="comment">//如果插入后元素超过了扩容阈值，就会进行扩容操作</span></span><br><span class="line">        resize();</span><br><span class="line">    afterNodeInsertion(evict);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>进入resize方法，学习hashmap是怎么扩容的：</p>
+<p>先看一下扩容的注释：大体就是这个方法会进行初始化或者加倍扩容。根据字符的阈值进行扩容，如果阈值为0，则进行初始化，初始化容量为容器的默认容量16，否则使用二次幂扩展。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">* Initializes or doubles table size.  If <span class="keyword">null</span>, allocates in</span><br><span class="line">* accord with initial capacity target held in field threshold.</span><br><span class="line">* Otherwise, because we are using power-of-two expansion, the</span><br><span class="line">* elements from each bin must either stay at same index, or move</span><br><span class="line">* with a power of two offset in the <span class="keyword">new</span> table.</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>从上面的源码注释我们可以看出，扩容分为两种大情况：<ul>
+<li>初始化容量，原本容器为0。（oldCap &gt; 0）</li>
+<li>扩容容器，原本容器有阈值，根据2的指数幂去拓展。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Node&lt;K,V&gt;[] resize() &#123;</span><br><span class="line">        Node&lt;K,V&gt;[] oldTab = table; <span class="comment">//引用扩容前的哈希表</span></span><br><span class="line">        <span class="keyword">int</span> oldCap = (oldTab == <span class="keyword">null</span>) ? <span class="number">0</span> : oldTab.length; <span class="comment">//旧的容量是否为空，空为0否则赋值</span></span><br><span class="line">        <span class="keyword">int</span> oldThr = threshold;<span class="comment">//表示扩容前的扩容阈值，触发本次扩容的阈值</span></span><br><span class="line">        <span class="keyword">int</span> newCap, newThr = <span class="number">0</span>;<span class="comment">//创造两个变量作为新容量和新阈值</span></span><br><span class="line">        <span class="keyword">if</span> (oldCap &gt; <span class="number">0</span>) &#123; <span class="comment">//如果旧的容量大于0，则说明不是初始化容量，而要进行扩容</span></span><br><span class="line">            <span class="keyword">if</span> (oldCap &gt;= MAXIMUM_CAPACITY) &#123; <span class="comment">//如果旧容量大于容量最大值，则说明无法扩容了</span></span><br><span class="line">                threshold = Integer.MAX_VALUE; <span class="comment">//把阈值改为最大值</span></span><br><span class="line">                <span class="keyword">return</span> oldTab; <span class="comment">//返回老数组</span></span><br><span class="line">            &#125;</span><br><span class="line">                      <span class="comment">//新的容量等于旧的容量左移一位，小于的容量最大值</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> ((newCap = oldCap &lt;&lt; <span class="number">1</span>) &lt; MAXIMUM_CAPACITY &amp;&amp; </span><br><span class="line">                     oldCap &gt;= DEFAULT_INITIAL_CAPACITY) </span><br><span class="line">          			  <span class="comment">//并且旧的容量大于等于初始化容量</span></span><br><span class="line">                newThr = oldThr &lt;&lt; <span class="number">1</span>; <span class="comment">// double threshold（扩容阈值，左移一位，等于乘2）</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (oldThr &gt; <span class="number">0</span>) </span><br><span class="line">            <span class="comment">// 如果旧的阈值大于0，这里你会很奇怪容器为什么没有容量，还有旧的阈值</span></span><br><span class="line">            <span class="comment">//因为调用1、newHashMap(initCap,loadFactor) 2、newHashMap(initCap) </span></span><br><span class="line">            <span class="comment">//3、newHashMap(map)这三种方法底层调用tableSizeFor()方法，返回threshold</span></span><br><span class="line">            newCap = oldThr;  <span class="comment">//新的容器就会等于旧的阈值</span></span><br><span class="line">        <span class="keyword">else</span> &#123; <span class="comment">// zero initial threshold signifies using defaults（没有阈值就用初始化的）</span></span><br><span class="line">            newCap = DEFAULT_INITIAL_CAPACITY; <span class="comment">//新容量为默认容量为16.</span></span><br><span class="line">            newThr = (<span class="keyword">int</span>)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);</span><br><span class="line">            <span class="comment">//新的阈值等于负载因子*初始化容量=0.75*16</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (newThr == <span class="number">0</span>) &#123; <span class="comment">//新的阈值为0</span></span><br><span class="line">            <span class="keyword">float</span> ft = (<span class="keyword">float</span>)newCap * loadFactor;<span class="comment">//ft等于新的容量*负载因子</span></span><br><span class="line">            newThr = (newCap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; (<span class="keyword">float</span>)MAXIMUM_CAPACITY ?</span><br><span class="line">                      (<span class="keyword">int</span>)ft : Integer.MAX_VALUE);</span><br><span class="line">            <span class="comment">//新阈值等于ft（需要同时满足新容量小于最大容量并且得到的ft小于最大容量）或容量最大值</span></span><br><span class="line">        &#125;</span><br><span class="line">        threshold = newThr; <span class="comment">//内部存储的阈值会等于扩容后的新阈值</span></span><br><span class="line">---------------------------以上代码就干了两件事，得到新阈值和得到了新的容量-------------------</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@SuppressWarnings(&#123;&quot;rawtypes&quot;,&quot;unchecked&quot;&#125;)</span></span><br><span class="line">            Node&lt;K,V&gt;[] newTab = (Node&lt;K,V&gt;[])<span class="keyword">new</span> Node[newCap];<span class="comment">//使用新容量得到新的哈希表</span></span><br><span class="line">        table = newTab;当前表变成 <span class="comment">//把旧表变成新表</span></span><br><span class="line">            <span class="comment">//如果临时存储的旧表不为空（说明不是初始化，初始化就没必要进行下面操作）</span></span><br><span class="line">        <span class="keyword">if</span> (oldTab != <span class="keyword">null</span>) &#123;  </span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; oldCap; ++j) &#123; <span class="comment">//遍历旧表</span></span><br><span class="line">                Node&lt;K,V&gt; e;  <span class="comment">//临时节点e</span></span><br><span class="line">                <span class="keyword">if</span> ((e = oldTab[j]) != <span class="keyword">null</span>) &#123; <span class="comment">//e等于老列表的节点，且不为空</span></span><br><span class="line">                    oldTab[j] = <span class="keyword">null</span>;<span class="comment">//把老列表节点置空，方便GC,GC我会在《JVM垃圾回收机制》说</span></span><br><span class="line">                     <span class="comment">//第一种情况：桶位只有一个元素，没有发生过hash碰撞</span></span><br><span class="line">                    <span class="keyword">if</span> (e.next == <span class="keyword">null</span>)</span><br><span class="line">                        newTab[e.hash &amp; (newCap - <span class="number">1</span>)] = e;<span class="comment">//计算hash值，在新数组复制这个元素</span></span><br><span class="line">                     <span class="comment">//第二种情况：桶位已经树化</span></span><br><span class="line">                    <span class="keyword">else</span> <span class="keyword">if</span> (e <span class="keyword">instanceof</span> TreeNode)  </span><br><span class="line">                        <span class="comment">//调用树化方法，《树的演变会讲》</span></span><br><span class="line">                        ((TreeNode&lt;K,V&gt;)e).split(<span class="keyword">this</span>, newTab, j, oldCap);</span><br><span class="line">          <span class="comment">//第三种情况：桶位链化，对链表的一些操作，这里的话，先看我下面介绍再回来看上面的</span></span><br><span class="line">                    <span class="keyword">else</span> &#123; <span class="comment">// preserve order   </span></span><br><span class="line">                        <span class="comment">//走到这里希望你先把下面文章中的链表扩容操作看明白，接下来具体实施</span></span><br><span class="line">						<span class="comment">//将链表分成了根据哈希值某一位分成高低两条链表，分别记录头尾节点</span></span><br><span class="line">                        Node&lt;K,V&gt; loHead = <span class="keyword">null</span>, loTail = <span class="keyword">null</span>;</span><br><span class="line">                        Node&lt;K,V&gt; hiHead = <span class="keyword">null</span>, hiTail = <span class="keyword">null</span>;</span><br><span class="line">                        Node&lt;K,V&gt; next;</span><br><span class="line">                         <span class="comment">//循环插入</span></span><br><span class="line">                        <span class="keyword">do</span> &#123;</span><br><span class="line">                            next = e.next;</span><br><span class="line">                              <span class="comment">//分配到低位链表，插入到lo链表中</span></span><br><span class="line">                            <span class="keyword">if</span> ((e.hash &amp; oldCap) == <span class="number">0</span>) &#123;</span><br><span class="line">                                <span class="comment">//e的哈希和容量发生与操作为0，说明e是头部节点</span></span><br><span class="line">                                <span class="keyword">if</span> (loTail == <span class="keyword">null</span>)<span class="comment">//</span></span><br><span class="line">                                &#123;  loHead = e;&#125;  <span class="comment">//低链的头是e</span></span><br><span class="line">                                <span class="keyword">else</span>  <span class="comment">//不是0的话，说明低链的头不是e</span></span><br><span class="line">                                &#123;loTail.next = e;&#125; <span class="comment">//低链的下一个节点为e</span></span><br><span class="line">                                loTail = e;	<span class="comment">//低链成为e，方便次循环操作</span></span><br><span class="line">                            &#125;</span><br><span class="line">                            <span class="comment">//分配到高位链表，插入到高位链表中</span></span><br><span class="line">                            <span class="keyword">else</span> &#123;</span><br><span class="line">                                <span class="keyword">if</span> (hiTail == <span class="keyword">null</span>)</span><br><span class="line">                                    hiHead = e;<span class="comment">//判断是不是头部节点</span></span><br><span class="line">                                <span class="keyword">else</span> <span class="comment">//否则插入到下一个节点中</span></span><br><span class="line">                                    hiTail.next = e;  <span class="comment">//低链的下一个节点为e</span></span><br><span class="line">                                hiTail = e; <span class="comment">//高链成为e，方便次循环操作</span></span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; <span class="keyword">while</span> ((e = next) != <span class="keyword">null</span>);</span><br><span class="line">                        <span class="comment">//上面的循环操作形成了两条链表，但还没有接到桶数组上</span></span><br><span class="line">						<span class="comment">//将链表接到桶数组上</span></span><br><span class="line">                        <span class="keyword">if</span> (loTail != <span class="keyword">null</span>) &#123;<span class="comment">//如果低链不为空</span></span><br><span class="line">                            loTail.next = <span class="keyword">null</span>; </span><br><span class="line">                            newTab[j] = loHead; <span class="comment">//新表插入低链</span></span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">if</span> (hiTail != <span class="keyword">null</span>) &#123;<span class="comment">///如果高链不为空</span></span><br><span class="line">                            hiTail.next = <span class="keyword">null</span>;</span><br><span class="line">                             <span class="comment">//还是假设新容量是32</span></span><br><span class="line">                            <span class="comment">//因为生成了高低位两条链表，高位链表比低位链表多16位</span></span><br><span class="line">                            <span class="comment">//所以j+16表示高位链表的桶位，将高位链表和桶连接</span></span><br><span class="line">                            newTab[j + oldCap] = hiHead;<span class="comment">//新表插入高链</span></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newTab;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>补充下知识盲区</p>
+<ul>
+<li><p>首先前置知识：桶中的寻址方式:<code>i=(n - 1) &amp; hash</code> </p>
+<ul>
+<li> n表示长度，是2的整数次幂，假设扩容前的n=16，所以存放在i=15处的元素的寻址结果二进制为i=1111，由于是与运算，所以hash值的最低四位为1:xxxxxx1111，这样hash&amp;(n-1)结果才能是i=1111 </li>
+</ul>
+<p> <img src="2021040410521249-1624588770356.png" alt="在这里插入图片描述"> </p>
+</li>
+<li><p>在同一个桶位的hash值的后四位肯定是相同的，继续根据上文扩容后的n=32，所以五个bit位决定桶位置，根据倒数第五位来将扩容前的长链表给分开，分为高低两条链表</p>
+</li>
+<li><p>假设倒数第五位是1：xxxx11111，e.hash &amp; oldCap中oldCap是16(二进制位):10000,所以结果:xxxx10000，存放到桶16的位置 </p>
+</li>
+<li><p>假设倒数第五位是0: xxxx01111, e.hash &amp; oldCap中oldCap是16(二进制位):10000,所以结果:xxxx00000，存放到桶0的位置 。</p>
+<p>这样高低两个链表存储位置差了一个oldCap  。</p>
+<p><img src="2021040411112372.png" alt="在这里插入图片描述"> </p>
+<p><strong>看完这里就能返回去，继续看源码了。</strong></p>
+</li>
+<li><p>下面进入treeifyBin源码，我们来说一下树化函数，即链表转红黑树。</p>
+<ul>
+<li>tab：要进行树化的节点数组。</li>
+<li>hash：新增键值对中key的hash值</li>
+<li>e：用来保存桶内寻址对应的链表存储的节点的位置。</li>
+<li>n：节点数组长度</li>
+<li>treeify：树化函数，将链表变为树。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">   <span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">treeifyBin</span><span class="params">(Node&lt;K,V&gt;[] tab, <span class="keyword">int</span> hash)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">int</span> n, index; Node&lt;K,V&gt; e;</span><br><span class="line">       <span class="comment">//1、不转换只扩容</span></span><br><span class="line">       <span class="comment">//如果这个节点数组为空或者小于默认树化容量64</span></span><br><span class="line">       <span class="keyword">if</span> (tab == <span class="keyword">null</span> || (n = tab.length) &lt; MIN_TREEIFY_CAPACITY)</span><br><span class="line">           resize(); <span class="comment">//扩容即可，扩容上面讲了，不再赘述</span></span><br><span class="line">       <span class="comment">//2、转换</span></span><br><span class="line">       <span class="comment">//桶内寻址对应的链表存储的节点不为空</span></span><br><span class="line">       <span class="keyword">else</span> <span class="keyword">if</span> ((e = tab[index = (n - <span class="number">1</span>) &amp; hash]) != <span class="keyword">null</span>) &#123;</span><br><span class="line">           TreeNode&lt;K,V&gt; hd = <span class="keyword">null</span>, tl = <span class="keyword">null</span>;<span class="comment">//初始化两个临时变量，头节点和尾节点</span></span><br><span class="line">           <span class="keyword">do</span> &#123;<span class="comment">//把节点e转换为树状节点</span></span><br><span class="line">               TreeNode&lt;K,V&gt; p = replacementTreeNode(e, <span class="keyword">null</span>);</span><br><span class="line">               <span class="keyword">if</span> (tl == <span class="keyword">null</span>)<span class="comment">//如果尾部节点为空，说明p是第一个节点，就把p给到头部节点</span></span><br><span class="line">                   hd = p;</span><br><span class="line">               <span class="keyword">else</span> &#123; <span class="comment">//尾部节点不为空，表示原表有节点</span></span><br><span class="line">                   p.prev = tl;<span class="comment">//把p的前置指针给到上一个的尾部节点</span></span><br><span class="line">                   tl.next = p;<span class="comment">//把上一个尾部节点的后置指针给到p</span></span><br><span class="line">               &#125;</span><br><span class="line">               tl = p;  <span class="comment">//尾部节点就变成了p</span></span><br><span class="line">           &#125; <span class="keyword">while</span> ((e = e.next) != <span class="keyword">null</span>); <span class="comment">//对链表进行遍历</span></span><br><span class="line">           <span class="keyword">if</span> ((tab[index] = hd) != <span class="keyword">null</span>) </span><br><span class="line"><span class="comment">//hd不为空，说明p是第一个节点，如果p是第一个树状节点，则代表原本它不是一棵树，则我们继续树化</span></span><br><span class="line">               hd.treeify(tab);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>我们再进入treeify方法，希望这个方法是最后一个树化方法了..<ul>
+<li>dir：标识方向，-1表示左边，1表示右边</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">treeify</span><span class="params">(Node&lt;K,V&gt;[] tab)</span> </span>&#123;</span><br><span class="line">    TreeNode&lt;K,V&gt; root = <span class="keyword">null</span>;  <span class="comment">//初始化树的根节点为空</span></span><br><span class="line">    <span class="comment">// 遍历链表，x指向当前节点、next指向下一个节点</span></span><br><span class="line">    <span class="keyword">for</span> (TreeNode&lt;K,V&gt; x = <span class="keyword">this</span>, next; x != <span class="keyword">null</span>; x = next) &#123;</span><br><span class="line">        next = (TreeNode&lt;K,V&gt;)x.next;<span class="comment">//把节点树化后，标记下个next</span></span><br><span class="line">        x.left = x.right = <span class="keyword">null</span>;<span class="comment">//设置当前节点左右为空</span></span><br><span class="line">        <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123; <span class="comment">//情况1：如果根节点为空</span></span><br><span class="line">            x.parent = <span class="keyword">null</span>; <span class="comment">//因为是根节点，设置父节点为空</span></span><br><span class="line">            x.red = <span class="keyword">false</span>;<span class="comment">//根节点必须是红色</span></span><br><span class="line">            root = x; <span class="comment">//设置x为根节点</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123; <span class="comment">//情况2：如果根节点不为空，则插入下面节点</span></span><br><span class="line">            K k = x.key; <span class="comment">//泛型，将x的键取出</span></span><br><span class="line">            <span class="keyword">int</span> h = x.hash;  <span class="comment">//取出x的哈希值</span></span><br><span class="line">            Class&lt;?&gt; kc = <span class="keyword">null</span>;   <span class="comment">// 定义key所属的Class</span></span><br><span class="line">            <span class="keyword">for</span> (TreeNode&lt;K,V&gt; p = root;;) &#123; <span class="comment">//遍历树，无限循环，只能内部跳出</span></span><br><span class="line">                <span class="keyword">int</span> dir, ph;   <span class="comment">// dir 标识方向（左右）、ph标识当前树节点的hash值</span></span><br><span class="line">                K pk = p.key; <span class="comment">//取出当前树节点的key</span></span><br><span class="line">                <span class="keyword">if</span> ((ph = p.hash) &gt; h)<span class="comment">//如果当前树节点hash值 大于 当前链表节点的hash值</span></span><br><span class="line">                    dir = -<span class="number">1</span>; <span class="comment">//放到左边</span></span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (ph &lt; h)<span class="comment">//如果当前树节点hash值 小于 当前链表节点的hash值</span></span><br><span class="line">                    dir = <span class="number">1</span>;<span class="comment">//放到右边</span></span><br><span class="line">                               </span><br><span class="line">         <span class="comment">//如果两个节点的key的hash值相等，那么还要通过其他方式再进行比较</span></span><br><span class="line">         <span class="comment">//如果当前链表节点的key实现了comparable接口，并且当前树节点和链表节点是相同Class</span></span><br><span class="line">         <span class="comment">//的实例，那么通过comparable的方式再比较两者。</span></span><br><span class="line">         <span class="comment">//如果还是相等，最后再通过tieBreakOrder比较一次</span></span><br><span class="line">    </span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> ((kc == <span class="keyword">null</span> &amp;&amp;</span><br><span class="line">                          (kc = comparableClassFor(k)) == <span class="keyword">null</span>) ||</span><br><span class="line">                         (dir = compareComparables(kc, k, pk)) == <span class="number">0</span>)</span><br><span class="line">                    dir = tieBreakOrder(k, pk);</span><br><span class="line"></span><br><span class="line">                TreeNode&lt;K,V&gt; xp = p; <span class="comment">//  保存当前树节点</span></span><br><span class="line">                </span><br><span class="line">       <span class="comment">// 如果dir 小于等于0 ： 当前链表节点一定放置在当前树节点的左侧，但不一定是该树节点				//	的左孩子，也可能是左孩子的右孩子 或者 更深层次的节点。</span></span><br><span class="line">       <span class="comment">//如果dir 大于0 ： 当前链表节点一定放置在当前树节点的右侧，但不一定是该树节点的右			   //孩子，也可能是右孩子的左孩子 或者 更深层次的节点。</span></span><br><span class="line">       <span class="comment">//如果当前树节点不是叶子节点，那么最终会以当前树节点的左孩子或者右孩子 为 起始节点  			   //再从GOTO1 处开始 重新寻找自己（当前链表节点）的位置</span></span><br><span class="line">       <span class="comment">//如果当前树节点就是叶子节点，那么根据dir的值，就可以把当前链表节点挂载到当前树节点				   //的左或者右侧了。</span></span><br><span class="line">       <span class="comment">//挂载之后，还需要重新把树进行平衡。平衡之后，就可以针对下一个链表节点进行处理了。</span></span><br><span class="line">                <span class="keyword">if</span> ((p = (dir &lt;= <span class="number">0</span>) ? p.left : p.right) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    x.parent = xp;</span><br><span class="line">                    <span class="keyword">if</span> (dir &lt;= <span class="number">0</span>)</span><br><span class="line">                        xp.left = x;</span><br><span class="line">                    <span class="keyword">else</span></span><br><span class="line">                        xp.right = x;</span><br><span class="line">                    root = balanceInsertion(root, x); <span class="comment">//树的平衡这块，大家看我的文章《树的演变把》</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    moveRootToFront(tab, root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">zsp</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://270520006.github.io/2021/06/11/%E5%AE%B9%E5%99%A8%E6%BA%90%E7%A0%81/">https://270520006.github.io/2021/06/11/%E5%AE%B9%E5%99%A8%E6%BA%90%E7%A0%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://270520006.github.io" target="_blank">zsp</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java%E8%BF%9B%E9%98%B6/">java进阶</a></div><div class="post_share"><div class="social-share" data-image="/images/material/%E9%AB%98%E5%9D%82%E7%A9%97%E4%B9%83%E6%9E%9C.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/06/11/%E5%8F%8D%E5%B0%84/"><img class="prev-cover" src="/images/material/nico.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">反射</div></div></a></div><div class="next-post pull-right"><a href="/2021/06/11/%E5%8C%85%E8%A3%85%E6%A8%A1%E5%BC%8F/"><img class="next-cover" src="/images/material/jo%E5%A4%AA%E9%83%8E.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">包装模式</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/06/11/反射/" title="反射"><img class="cover" src="/images/material/nico.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-11</div><div class="title">反射</div></div></a></div><div><a href="/2021/06/21/未来趋势：jdk8函数式编程（一）/" title="未来趋势：jdk8函数式编程（一）"><img class="cover" src="/images/material/%E9%9C%9E.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-21</div><div class="title">未来趋势：jdk8函数式编程（一）</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/jo4.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">zsp</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">14</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/270520006"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/270520006" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:15396226187@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">欢迎大家来到我的博客！我是一名程序猿，热爱技术和长跑，希望我们能成为朋友~</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E5%AE%B9%E5%99%A8%E6%BA%90%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">题容器源码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ArrayList%EF%BC%9A"><span class="toc-number">1.0.1.</span> <span class="toc-text">ArrayList：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Add%E6%96%B9%E6%B3%95%EF%BC%9A%EF%BC%88%E9%9D%A2%E8%AF%95%E5%8F%AF%E4%BB%A5%E7%A7%80%E4%B8%80%E4%B8%8Bgrow%E8%BF%87%E7%A8%8B%EF%BC%89"><span class="toc-number">1.0.1.1.</span> <span class="toc-text">Add方法：（面试可以秀一下grow过程）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Get%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="toc-number">1.0.1.2.</span> <span class="toc-text">Get方法：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Remove%E6%96%B9%E6%B3%95%EF%BC%9A-%E9%9D%A2%E8%AF%95%E5%8F%AF%E4%BB%A5%E7%A7%80%E4%B8%80%E4%B8%8Barraycopy%E8%BF%87%E7%A8%8B"><span class="toc-number">1.0.1.3.</span> <span class="toc-text">Remove方法：(面试可以秀一下arraycopy过程)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LinkedList"><span class="toc-number">1.0.2.</span> <span class="toc-text">LinkedList</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Add%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="toc-number">1.0.2.1.</span> <span class="toc-text">Add方法：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Get%E6%96%B9%E6%B3%95"><span class="toc-number">1.0.2.2.</span> <span class="toc-text">Get方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Remove%E6%96%B9%E6%B3%95%EF%BC%9A"><span class="toc-number">1.0.2.3.</span> <span class="toc-text">Remove方法：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hashmap"><span class="toc-number">1.0.3.</span> <span class="toc-text">Hashmap</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.0.3.1.</span> <span class="toc-text">底层数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%A3%E5%88%97%E8%A1%A8"><span class="toc-number">1.0.3.1.1.</span> <span class="toc-text">散列表</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="toc-number">1.0.3.1.2.</span> <span class="toc-text">红黑树</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%B7%A6%E6%97%8B"><span class="toc-number">1.0.3.1.2.1.</span> <span class="toc-text">左旋</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%8F%B3%E6%97%8B"><span class="toc-number">1.0.3.1.2.2.</span> <span class="toc-text">右旋</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0"><span class="toc-number">1.0.3.1.2.3.</span> <span class="toc-text">添加</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">1.0.3.1.2.4.</span> <span class="toc-text">删除</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AF%E8%AF%AD"><span class="toc-number">1.0.3.2.</span> <span class="toc-text">术语</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.0.3.3.</span> <span class="toc-text">参数介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Put%E6%96%B9%E6%B3%95"><span class="toc-number">1.0.3.4.</span> <span class="toc-text">Put方法</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/07/07/%E6%A0%91%E7%9A%84%E6%BC%94%E5%8F%98/" title="树的演变"><img src="/images/material/%E5%92%95%E5%92%95%E5%90%88%E7%85%A7.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="树的演变"/></a><div class="content"><a class="title" href="/2021/07/07/%E6%A0%91%E7%9A%84%E6%BC%94%E5%8F%98/" title="树的演变">树的演变</a><time datetime="2021-07-07T01:55:12.000Z" title="发表于 2021-07-07 01:55:12">2021-07-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/27/%E7%8E%A9%E8%BD%ACJVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/" title="玩转JVM之垃圾收集器"><img src="/images/material/486.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="玩转JVM之垃圾收集器"/></a><div class="content"><a class="title" href="/2021/06/27/%E7%8E%A9%E8%BD%ACJVM%E4%B9%8B%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8/" title="玩转JVM之垃圾收集器">玩转JVM之垃圾收集器</a><time datetime="2021-06-27T23:46:12.000Z" title="发表于 2021-06-27 23:46:12">2021-06-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/25/hashmap%E7%9A%84put%E6%96%B9%E6%B3%95/" title="Hashmap的数据结构、树化函数、put方法"><img src="/images/material/%E5%B0%8F%E6%B3%89%E8%8A%B1%E9%98%B3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hashmap的数据结构、树化函数、put方法"/></a><div class="content"><a class="title" href="/2021/06/25/hashmap%E7%9A%84put%E6%96%B9%E6%B3%95/" title="Hashmap的数据结构、树化函数、put方法">Hashmap的数据结构、树化函数、put方法</a><time datetime="2021-06-25T12:46:12.000Z" title="发表于 2021-06-25 12:46:12">2021-06-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/21/%E6%9C%AA%E6%9D%A5%E8%B6%8B%E5%8A%BF%EF%BC%9Ajdk8%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/" title="未来趋势：jdk8函数式编程（一）"><img src="/images/material/%E9%9C%9E.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="未来趋势：jdk8函数式编程（一）"/></a><div class="content"><a class="title" href="/2021/06/21/%E6%9C%AA%E6%9D%A5%E8%B6%8B%E5%8A%BF%EF%BC%9Ajdk8%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/" title="未来趋势：jdk8函数式编程（一）">未来趋势：jdk8函数式编程（一）</a><time datetime="2021-06-21T01:32:12.000Z" title="发表于 2021-06-21 01:32:12">2021-06-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/16/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" title="工厂模式"><img src="/images/material/oldjo.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="工厂模式"/></a><div class="content"><a class="title" href="/2021/06/16/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" title="工厂模式">工厂模式</a><time datetime="2021-06-16T21:59:12.000Z" title="发表于 2021-06-16 21:59:12">2021-06-16</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/material/%E9%AB%98%E5%9D%82%E7%A9%97%E4%B9%83%E6%9E%9C.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By zsp</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
